@@ -38,6 +38,10 @@ from micropython import const
 import adafruit_thermal_printer.thermal_printer as thermal_printer
 
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
+
+
 # pylint: disable=bad-whitespace
 # Internally used constants.
 _INVERSE_MASK       = const(1 << 1) # Not in 2.6.8 firmware

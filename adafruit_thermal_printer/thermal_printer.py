@@ -39,7 +39,7 @@ from micropython import const
 
 
 __version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/CircuitPython_thermal_printer.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
 
 
 # pylint: disable=bad-whitespace
@@ -111,7 +111,7 @@ class ThermalPrinter:
 
         # Another odd pylint case, it seems to not realize this is a descriptor
         # which by design only implements get, set, init.  As a result workaround
-        # this pyline issue by disabling the warning.
+        # this pylint issue by disabling the warning.
         # pylint: disable=too-few-public-methods
         def __init__(self, mask):
             self._mask = mask
