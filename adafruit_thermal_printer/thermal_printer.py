@@ -208,8 +208,7 @@ class ThermalPrinter:
 
     def send_command(self, command):
         """Send a command string to the printer."""
-        for char in command:
-            self._write_char(char)
+        self._uart.write(command)
 
     # Do initialization in begin instead of the initializer because this
     # initialization takes a long time (5 seconds) and shouldn't happen during
@@ -223,7 +222,6 @@ class ThermalPrinter:
         """
         assert 0 <= heat_time <= 255
         self._set_timeout(0.5)  # Half second delay for printer to initialize.
-        self.wake()
         self.reset()
         # ESC 7 n1 n2 n3 Setting Control Parameter Command
         # n1 = "max heating dots" 0-255 -- max number of thermal print head
@@ -242,9 +240,8 @@ class ThermalPrinter:
         # More heating time = darker print, but slower printing speed and
         # possibly paper 'stiction'.  More heating interval = clearer print,
         # but slower printing speed.
-        self.send_command('\x1B7')  # ESC + '7' (print settings)
-        # Send heating dots, heat time, heat interval.
-        self.send_command('\x0B{0}\x28'.format(chr(heat_time)))
+        # Send ESC + '7' (print settings) + heating dots, heat time, heat interval.
+        self.send_command('\x1B7\x0B{0}\x28'.format(chr(heat_time)))
         # Print density description from manual:
         # DC2 # n Set printing density
         # D4..D0 of n is used to set the printing density.  Density is
@@ -265,15 +262,21 @@ class ThermalPrinter:
         self._max_column = 32
         self._char_height = 24
         self._line_spacing = 6
+        self._barcode_height = 50
+        # Configure tab stops on recent printers.
+        # ESC + 'D' + tab stop value list ending with null to terminate.
+        self.send_command('\x1BD\x04\x08\x10\x14\x18\x1C\x00')
+
 
     def print(self, text, end='\n'):
         """Print a line of text.  Optionally specify the end keyword to
         override the new line printed after the text (set to None to disable
         the new line entirely).
         """
-        self.send_command(text)
+        for char in text:
+            self._write_char(char)
         if end is not None:
-            self.send_command(end)
+            self._write_char(end)
 
     def print_barcode(self, text, barcode_type):
         """Print a barcode with the specified text/number (the meaning
@@ -450,24 +453,6 @@ class ThermalPrinter:
         """Put the printer into an online state after previously put offline.
         """
         self.send_command('\x1B=\x01')  # ESC + '=' + 1
-
-    def sleep_after(self, seconds):
-        """Put the printer into sleep mode after the specified number of
-        seconds (0-65535).  Must call wake to wake up and send commands
-        afterwards!
-        """
-        assert 0 <= seconds <= 65535
-        low_byte = seconds & 0xFF
-        high_byte = (seconds >> 8) & 0xFF
-        self.send_command('\x1B8{0}{1}'.format(chr(low_byte), chr(high_byte)))
-
-    def wake(self):
-        """Wake the thermal printer into an online state ready to receive
-        commands.
-        """
-        self.send_command('\xFF')  # Wake command.
-        time.sleep(0.050)
-        self.send_command('\x1B8\x00\x00')  # Sleep off
 
     def has_paper(self):
         """Return a boolean indicating if the printer has paper.  You MUST have

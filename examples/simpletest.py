@@ -24,8 +24,8 @@ TX = board.TX
 
 # Create a serial connection for the printer.  You must use the same baud rate
 # as your printer is configured (print a test page by holding the button
-# during power-up and it will show the baud rate).  Most printers use 119200.
-uart = busio.UART(TX, RX, baudrate=119200)
+# during power-up and it will show the baud rate).  Most printers use 19200.
+uart = busio.UART(TX, RX, baudrate=19200)
 
 # Create the printer instance.
 printer = thermal_printer.ThermalPrinter(uart)
@@ -34,6 +34,13 @@ printer = thermal_printer.ThermalPrinter(uart)
 # to warm up and be ready to accept commands (hence calling it explicitly vs.
 # automatically in the initializer above).
 printer.begin()
+
+# Check if the printer has paper.  This only works if the RX line is connected
+# on your board (but BE CAREFUL as mentioned above this RX line is 5V!)
+if printer.has_paper():
+    print('Printer has paper!')
+else:
+    print('Printer might be out of paper, or RX is disconnected!')
 
 # Print a test page:
 printer.test_page()
@@ -44,5 +51,61 @@ printer.feed(2)
 # Print a line of text:
 printer.print('Hello world!')
 
-# Move the paper forward two lines:
+# Print a bold line of text:
+printer.bold = True
+printer.print('Bold hello world!')
+printer.bold = False
+
+# Print a normal/thin underline line of text:
+printer.underline_thin()
+printer.print('Thin underline!')
+
+# Print a thick underline line of text:
+printer.underline_thick()
+printer.print('Thick underline!')
+
+# Disable underlines.
+printer.underline_off()
+
+# Print an inverted line.
+printer.inverse = True
+printer.print('Inverse hello world!')
+printer.inverse = False
+
+# Print an upside down line.
+printer.upside_down = True
+printer.print('Upside down hello!')
+printer.upside_down = False
+
+# Print a double height line.
+printer.double_height = True
+printer.print('Double height!')
+printer.double_height = False
+
+# Print a double width line.
+printer.double_width = True
+printer.print('Double width!')
+printer.double_width = False
+
+# Print a strike-through line.
+printer.strike = True
+printer.print('Strike-through hello!')
+printer.strike = False
+
+# Print medium size text.
+printer.set_size_medium()
+printer.print('Medium size text!')
+
+# Print large size text.
+printer.set_size_large()
+printer.print('Large size text!')
+
+# Back to normal / small size text.
+printer.set_size_small()
+
+# Print a UPC barcode.
+printer.print('UPCA barcode:')
+printer.print_barcode('123456789012', printer.UPC_A)
+
+# Feed a few lines to see everything.
 printer.feed(2)

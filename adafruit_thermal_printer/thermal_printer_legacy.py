@@ -108,28 +108,6 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         self._set_timeout((self._barcode_height + 40) * self._dot_print_s)
         self._column = 0
 
-    def wake(self):
-        """Wake the thermal printer into an online state ready to receive
-        commands.
-        """
-        self.send_command('\xFF')  # Wake command.
-        # Datasheet recommends a 50 mS delay before issuing further commands,
-        # but in practice this alone isn't sufficient (e.g. text size/style
-        # commands may still be misinterpreted on wake).  A slightly longer
-        # delay, interspersed with NUL chars (no-ops) seems to help.
-        for _ in range(10):
-            self.send_command('\x00')
-            self._set_timeout(0.01)
-
-    def sleep_after(self, seconds):
-        """Put the printer into sleep mode after the specified number of
-        seconds (0-255).  Must call wake to wake up and send commands
-        afterwards!
-        """
-        # Firmware before 2.64 uses an 8-bit number of seconds instead of 16-bit.
-        assert 0 <= seconds <= 255
-        self.send_command('\x1B8{0}'.format(chr(seconds)))
-
     def reset(self):
         """Reset the printer."""
         # Issue a reset command to the printer. (ESC + @)
@@ -139,6 +117,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         self._max_column = 32
         self._char_height = 24
         self._line_spacing = 6
+        self._barcode_height = 50
         # Skip tab configuration on older printers.
 
     def feed(self, lines):
