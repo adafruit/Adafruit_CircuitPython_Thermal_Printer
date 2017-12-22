@@ -297,15 +297,18 @@ class ThermalPrinter:
         self._set_timeout((self._barcode_height + 40) * self._dot_print_s)
         self._column = 0
 
-    def print_bitmap(self, width, height, data):
+    def _print_bitmap(self, width, height, data):
         """Print a bitmap image of the specified width, height and data bytes.
         Data bytes must be in 1-bit per pixel format, i.e. each byte represents
         8 pixels of image data along a row of the image.  You will want to
         pre-process your images with a script, you CANNOT send .jpg/.bmp/etc.
         image formats.  See this Processing sketch for preprocessing:
         https://github.com/adafruit/Adafruit-Thermal-Printer-Library/blob/master/processing/bitmapImageConvert/bitmapImageConvert.pde
+        NOTE: This is currently not working because it appears the bytes are
+        sent too slowly and the printer gets confused with not enough data being
+        sent to it in the expected time.
         """
-        assert len(data) >= ((width * height) // 8)
+        assert len(data) >= (width // 8) * height
         row_bytes = (width + 7) // 8  # Round up to next byte boundary.
         row_bytes_clipped = min(row_bytes, 48)  # 384 pixels max width.
         chunk_height_limit = 256 // row_bytes_clipped
