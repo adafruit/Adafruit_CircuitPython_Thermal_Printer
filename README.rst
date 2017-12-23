@@ -12,7 +12,7 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-TODO
+CircuitPython module for control of various small serial thermal printers.
 
 Dependencies
 =============

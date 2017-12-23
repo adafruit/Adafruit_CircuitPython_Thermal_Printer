@@ -103,6 +103,17 @@ printer.print('Large size text!')
 # Back to normal / small size text.
 printer.set_size_small()
 
+# Print center justified text.
+printer.justify_center()
+printer.print('Center justified!')
+
+# Print right justified text.
+printer.justify_right()
+printer.print('Right justified!')
+
+# Back to left justified / normal text.
+printer.justify_left()
+
 # Print a UPC barcode.
 printer.print('UPCA barcode:')
 printer.print_barcode('123456789012', printer.UPC_A)
