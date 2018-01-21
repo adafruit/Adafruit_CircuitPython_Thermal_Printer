@@ -25,6 +25,6 @@ install:
   - pip install pylint circuitpython-build-tools
 
 script:
-  - pylint thermal_printer.py
+  - pylint --disable=missing-docstring adafruit_thermal_printer/*.py
   - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
   - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-thermal-printer --library_location .
