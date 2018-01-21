@@ -49,6 +49,16 @@ _BOLD_MASK          = const(1 << 3)
 _DOUBLE_HEIGHT_MASK = const(1 << 4)
 _DOUBLE_WIDTH_MASK  = const(1 << 5)
 _STRIKE_MASK        = const(1 << 6)
+
+# External constants:
+JUSTIFY_LEFT      = const(0)
+JUSTIFY_CENTER    = const(1)
+JUSTIFY_RIGHT     = const(2)
+SIZE_SMALL        = const(0)
+SIZE_MEDIUM       = const(1)
+SIZE_LARGE        = const(2)
+UNDERLINE_THIN    = const(0)
+UNDERLINE_THICK   = const(1)
 # pylint: enable=bad-whitespace
 
 
@@ -344,9 +354,9 @@ class ThermalPrinter:
         to a good state after printing different size, weight, etc. text.
         """
         self.online()
-        self.justify_left()
-        self.set_size_small()
-        self.underline_off()
+        self.justify = JUSTIFY_LEFT
+        self.size = SIZE_SMALL
+        self.underline = None
         self.inverse = False
         self.upside_down = False
         self.double_height = False
@@ -358,50 +368,61 @@ class ThermalPrinter:
         self._set_charset()
         self._set_code_page()
 
-    def justify_left(self):
-        """Set left justification of text."""
-        self.send_command('\x1Ba\x00')  # ESC + 'a' + 0
+    def _set_justify(self, val):
+        assert 0 <= val <= 2
+        if val == JUSTIFY_LEFT:
+            self.send_command('\x1Ba\x00')  # ESC + 'a' + 0
+        elif val == JUSTIFY_CENTER:
+            self.send_command('\x1Ba\x01')  # ESC + 'a' + 1
+        elif val == JUSTIFY_RIGHT:
+            self.send_command('\x1Ba\x02')  # ESC + 'a' + 2
 
-    def justify_center(self):
-        """Set center justification of text."""
-        self.send_command('\x1Ba\x01')  # ESC + 'a' + 1
+    # pylint: disable=line-too-long
+    # Write-only property, can't assume we can read state from the printer
+    # since there is no command for it and hooking up RX is discouraged
+    # (5V will damage many boards).
+    justify = property(None, _set_justify, None, "Set the justification of text, must be a value of JUSTIFY_LEFT, JUSTIFY_CENTER, or JUSTIFY_RIGHT.")
+    # pylint: enable=line-too-long
 
-    def justify_right(self):
-        """Set right justification of text."""
-        self.send_command('\x1Ba\x02')  # ESC + 'a' + 2
-
-    def set_size_small(self):
-        """Set small text size."""
-        self._char_height = 24
-        self._max_column = 32
-        self.send_command('\x1D!\x00')  # ASCII GS + '!' + 0x00
+    def _set_size(self, val):
+        assert 0 <= val <= 2
+        if val == SIZE_SMALL:
+            self._char_height = 24
+            self._max_column = 32
+            self.send_command('\x1D!\x00')  # ASCII GS + '!' + 0x00
+        elif val == SIZE_MEDIUM:
+            self._char_height = 48
+            self._max_column = 32
+            self.send_command('\x1D!\x01')  # ASCII GS + '!' + 0x01
+        elif val == SIZE_LARGE:
+            self._char_height = 48
+            self._max_column = 16
+            self.send_command('\x1D!\x11')  # ASCII GS + '!' + 0x11
         self._column = 0
 
-    def set_size_medium(self):
-        """Set medium (double height) text size."""
-        self._char_height = 48
-        self._max_column = 32
-        self.send_command('\x1D!\x01')  # ASCII GS + '!' + 0x01
-        self._column = 0
+    # pylint: disable=line-too-long
+    # Write-only property, can't assume we can read state from the printer
+    # since there is no command for it and hooking up RX is discouraged
+    # (5V will damage many boards).
+    size = property(None, _set_size, None, "Set the size of text, must be a value of SIZE_SMALL, SIZE_MEDIUM, or SIZE_LARGE.")
+    # pylint: enable=line-too-long
 
-    def set_size_large(self):
-        """Set large (double height & width) text size."""
-        self._char_height = 48
-        self._max_column = 16
-        self.send_command('\x1D!\x11')  # ASCII GS + '!' + 0x11
-        self._column = 0
+    def _set_underline(self, val):
+        assert val is None or (0 <= val <= 1)
+        if val is None:
+            # Turn off underline.
+            self.send_command('\x1B-\x00')  # ESC + '-' + 0
+        elif val == UNDERLINE_THIN:
+            self.send_command('\x1B-\x01')  # ESC + '-' + 1
+        elif val == UNDERLINE_THICK:
+            self.send_command('\x1B-\x02')  # ESC + '-' + 2
 
-    def underline_off(self):
-        """Turn off underline printing."""
-        self.send_command('\x1B-\x00')  # ESC + '-' + 0
-
-    def underline_thin(self):
-        """Turn on normal/thin underline printing."""
-        self.send_command('\x1B-\x01')  # ESC + '-' + 1
-
-    def underline_thick(self):
-        """Turn on thick underline printing."""
-        self.send_command('\x1B-\x02')  # ESC + '-' + 2
+    # pylint: disable=line-too-long
+    # Write-only property, can't assume we can read state from the printer
+    # since there is no command for it and hooking up RX is discouraged
+    # (5V will damage many boards).
+    underline = property(None, _set_underline, None, "Set the underline state of the text, must be None (off), UNDERLINE_THIN, or UNDERLINE_THICK.")
+    # pylint: enable=line-too-long
 
     def _set_inverse(self, inverse):
         # Set the inverse printing state to enabled disabled with the specified

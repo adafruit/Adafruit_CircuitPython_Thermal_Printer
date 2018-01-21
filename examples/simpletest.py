@@ -57,15 +57,15 @@ printer.print('Bold hello world!')
 printer.bold = False
 
 # Print a normal/thin underline line of text:
-printer.underline_thin()
+printer.underline = thermal_printer.UNDERLINE_THIN
 printer.print('Thin underline!')
 
 # Print a thick underline line of text:
-printer.underline_thick()
+printer.underline = thermal_printer.UNDERLINE_THICK
 printer.print('Thick underline!')
 
 # Disable underlines.
-printer.underline_off()
+printer.underline = None
 
 # Print an inverted line.
 printer.inverse = True
@@ -93,26 +93,26 @@ printer.print('Strike-through hello!')
 printer.strike = False
 
 # Print medium size text.
-printer.set_size_medium()
+printer.size = thermal_printer.SIZE_MEDIUM
 printer.print('Medium size text!')
 
 # Print large size text.
-printer.set_size_large()
+printer.size = thermal_printer.SIZE_LARGE
 printer.print('Large size text!')
 
 # Back to normal / small size text.
-printer.set_size_small()
+printer.size = thermal_printer.SIZE_SMALL
 
 # Print center justified text.
-printer.justify_center()
+printer.justify = thermal_printer.JUSTIFY_CENTER
 printer.print('Center justified!')
 
 # Print right justified text.
-printer.justify_right()
+printer.justify = thermal_printer.JUSTIFY_RIGHT
 printer.print('Right justified!')
 
 # Back to left justified / normal text.
-printer.justify_left()
+printer.justify = thermal_printer.JUSTIFY_LEFT
 
 # Print a UPC barcode.
 printer.print('UPCA barcode:')
