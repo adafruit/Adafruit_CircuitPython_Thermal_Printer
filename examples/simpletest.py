@@ -3,16 +3,14 @@
 import board
 import busio
 
-# Pick which version thermal printer to import.  Only ONE of these lines should
-# be uncommented depending on the version of your printer.  Hold the button on
-# the printer as it's powered on and it will print a test page that displays
-# the firmware version, like 2.64, 2.68, etc.
-# Use this line for printers with version 2.68 or higher:
-import adafruit_thermal_printer.thermal_printer as thermal_printer
-# Use this line for printers with version 2.64 up to (but not including) 2.68:
-#import adafruit_thermal_printer.thermal_printer_264 as thermal_printer
-# Use this line for printers with version up to (but not including) 2.64:
-#import adafruit_thermal_printer.thermal_printer_legacy as thermal_printer
+import adafruit_thermal_printer
+
+
+# Pick which version thermal printer class to use depending on the version of
+# your printer.  Hold the button on the printer as it's powered on and it will
+# print a test page that displays the firmware version, like 2.64, 2.68, etc.
+# Use this version in the get_printer_class function below.
+ThermalPrinter = adafruit_thermal_printer.get_printer_class(2.69)
 
 # Define RX and TX pins for the board's serial port connected to the printer.
 # Only the TX pin needs to be configued, and note to take care NOT to connect
@@ -28,12 +26,12 @@ TX = board.TX
 uart = busio.UART(TX, RX, baudrate=19200)
 
 # Create the printer instance.
-printer = thermal_printer.ThermalPrinter(uart)
+printer = ThermalPrinter(uart, auto_warm_up=False)
 
 # Initialize the printer.  Note this will take a few seconds for the printer
 # to warm up and be ready to accept commands (hence calling it explicitly vs.
-# automatically in the initializer above).
-printer.begin()
+# automatically in the initializer with the default auto_warm_up=True).
+printer.warm_up()
 
 # Check if the printer has paper.  This only works if the RX line is connected
 # on your board (but BE CAREFUL as mentioned above this RX line is 5V!)
@@ -57,11 +55,11 @@ printer.print('Bold hello world!')
 printer.bold = False
 
 # Print a normal/thin underline line of text:
-printer.underline = thermal_printer.UNDERLINE_THIN
+printer.underline = adafruit_thermal_printer.UNDERLINE_THIN
 printer.print('Thin underline!')
 
 # Print a thick underline line of text:
-printer.underline = thermal_printer.UNDERLINE_THICK
+printer.underline = adafruit_thermal_printer.UNDERLINE_THICK
 printer.print('Thick underline!')
 
 # Disable underlines.
@@ -93,26 +91,26 @@ printer.print('Strike-through hello!')
 printer.strike = False
 
 # Print medium size text.
-printer.size = thermal_printer.SIZE_MEDIUM
+printer.size = adafruit_thermal_printer.SIZE_MEDIUM
 printer.print('Medium size text!')
 
 # Print large size text.
-printer.size = thermal_printer.SIZE_LARGE
+printer.size = adafruit_thermal_printer.SIZE_LARGE
 printer.print('Large size text!')
 
 # Back to normal / small size text.
-printer.size = thermal_printer.SIZE_SMALL
+printer.size = adafruit_thermal_printer.SIZE_SMALL
 
 # Print center justified text.
-printer.justify = thermal_printer.JUSTIFY_CENTER
+printer.justify = adafruit_thermal_printer.JUSTIFY_CENTER
 printer.print('Center justified!')
 
 # Print right justified text.
-printer.justify = thermal_printer.JUSTIFY_RIGHT
+printer.justify = adafruit_thermal_printer.JUSTIFY_RIGHT
 printer.print('Right justified!')
 
 # Back to left justified / normal text.
-printer.justify = thermal_printer.JUSTIFY_LEFT
+printer.justify = adafruit_thermal_printer.JUSTIFY_LEFT
 
 # Print a UPC barcode.
 printer.print('UPCA barcode:')

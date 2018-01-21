@@ -137,8 +137,8 @@ class ThermalPrinter:
         # pylint: enable=protected-access
         # pylint: enable=too-few-public-methods
 
-    def __init__(self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021,
-                 dot_print_s=0.03):
+    def __init__(self, uart, *, byte_delay_s=0.00057346, dot_feed_s=0.0021,
+                 dot_print_s=0.03, auto_warm_up=True):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
         will output a 5V signal which can damage boards!  If RX is unconnected
@@ -147,7 +147,10 @@ class ThermalPrinter:
         and dot_print_s values are delays which are used to prevent overloading
         the printer with data.  Use the default delays unless you fully
         understand the workings of the printer and how delays, baud rate,
-        number of dots, heat time, etc. relate to each other.
+        number of dots, heat time, etc. relate to each other.  Can set
+        auto_warm_up to a boolean value (default True) to automatically call
+        the warm_up function which will initialize the printer (but can take a
+        significant amount of time, on the order 0.5-5 seconds, be warned!).
         """
         self.max_chunk_height = 255
         self._resume = 0
@@ -167,6 +170,8 @@ class ThermalPrinter:
         self._dot_feed_s = dot_feed_s
         self._dot_print_s = dot_print_s
         self.reset()
+        if auto_warm_up:
+            self.warm_up()
 
     def _set_timeout(self, period_s):
         # Set a timeout before future commands can be sent.
@@ -220,10 +225,10 @@ class ThermalPrinter:
         """Send a command string to the printer."""
         self._uart.write(command)
 
-    # Do initialization in begin instead of the initializer because this
+    # Do initialization in warm_up instead of the initializer because this
     # initialization takes a long time (5 seconds) and shouldn't happen during
     # object creation (users need explicit control of when to start it).
-    def begin(self, heat_time=120):
+    def warm_up(self, heat_time=120):
         """Initialize the printer.  Can specify an optional heat_time keyword
         to override the default heating timing of 1.2 ms.  See the datasheet
         for details on the heating time value (duration in 10uS increments).
