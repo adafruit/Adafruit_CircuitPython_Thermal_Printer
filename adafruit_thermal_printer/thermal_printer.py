@@ -353,10 +353,10 @@ class ThermalPrinter:
         self.double_width = False
         self.strike = False
         self.bold = False
-        self.set_line_height(30)
-        self.set_barcode_height(50)
-        self.set_charset()
-        self.set_code_page()
+        self._set_line_height(30)
+        self._set_barcode_height(50)
+        self._set_charset()
+        self._set_code_page()
 
     def justify_left(self):
         """Set left justification of text."""
@@ -470,7 +470,7 @@ class ThermalPrinter:
             return False
         return not status[0] & 0b00000100
 
-    def set_line_height(self, height):
+    def _set_line_height(self, height):
         """Set the line height in pixels.  This is the total amount of space
         between lines, including the height of text.  The smallest value is 24
         and the largest is 255.
@@ -479,13 +479,13 @@ class ThermalPrinter:
         self._line_spacing = height - 24
         self.send_command('\x1B3{0}'.format(chr(height)))  # ESC + '3' + height
 
-    def set_barcode_height(self, height):
+    def _set_barcode_height(self, height):
         """Set the barcode height in pixels.  Must be a value 1 - 255."""
         assert 1 <= height <= 255
         self._barcode_height = height
         self.send_command('\x1Dh{0}'.format(chr(height)))  # ASCII GS + 'h' + height
 
-    def set_charset(self, charset=0):
+    def _set_charset(self, charset=0):
         """Alters the character set for ASCII characters 0x23-0x7E.  See
         datasheet for details on character set values (0-15).  Note this is only
         supported on more recent firmware printers!
@@ -493,19 +493,13 @@ class ThermalPrinter:
         assert 0 <= charset <= 15
         self.send_command('\x1BR{0}'.format(chr(charset)))  # ESC + 'R' + charset
 
-    def set_code_page(self, code_page=0):
+    def _set_code_page(self, code_page=0):
         """Select alternate code page for upper ASCII symbols 0x80-0xFF.  See
         datasheet for code page values (0 - 47).  Note this is only supported
         on more recent firmware printers!
         """
         assert 0 <= code_page <= 47
         self.send_command('\x1Bt{0}'.format(chr(code_page)))  # ESC + 't' + code page
-
-    def set_char_spacing(self, spacing=0):
-        """Set the character spacing (in pixels).  Note this is only supported
-        on more recent firmware printers!"""
-        assert 0 <= spacing <= 255
-        self.send_command('\x1B {0}'.format(chr(spacing)))  # ESC + ' ' + spacing
 
     def tab(self):
         """Print a tab (i.e. move to next 4 character block).  Note this is
