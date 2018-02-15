@@ -3,9 +3,7 @@ Introduction
 ============
 
 .. image:: https://readthedocs.org/projects/adafruit_circuitpython_thermal_printer/badge/?version=latest
-
     :target: https://adafruit_circuitpython_thermal_printer.readthedocs.io/
-
     :alt: Documentation Status
 
 .. image :: https://img.shields.io/discord/327254708534116352.svg
