@@ -20,8 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 """
-`adafruit_thermal_printer.thermal_printer_264`
-====================================================
+`adafruit_thermal_printer.thermal_printer_264.ThermalPrinter`
+==============================================================
 
 Thermal printer control module built to work with small serial thermal
 receipt printers.  Note that these printers have many different firmware
