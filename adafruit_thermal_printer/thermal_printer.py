@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 """
-`adafruit_thermal_printer.thermal_printer`
+`adafruit_thermal_printer.thermal_printer.ThermalPrinter`
 ====================================================
 
 Thermal printer control module built to work with small serial thermal
