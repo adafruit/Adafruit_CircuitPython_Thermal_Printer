@@ -133,7 +133,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
 
         .. note:: be VERY CAREFUL to ensure your board can handle a 5V serial
         input before hooking up the RX line!
-        
+
         """
         # The paper check command is different for older firmware:
         self.send_command('\x1Br\x00')  # ESC + 'r' + 0
