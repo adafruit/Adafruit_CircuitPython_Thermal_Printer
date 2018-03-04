@@ -105,7 +105,7 @@ html_static_path = ['_static']
 html_favicon = '_static/favicon.ico'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Adafruit_thermal_printerLibrarydoc'
+htmlhelp_basename = 'adafruit_thermal_printerLibrarydoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
