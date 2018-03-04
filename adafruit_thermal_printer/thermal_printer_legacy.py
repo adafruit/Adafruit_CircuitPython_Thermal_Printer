@@ -131,9 +131,9 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         """Return a boolean indicating if the printer has paper.  You MUST have
         the serial RX line hooked up for this to work.
 
-        .. note:: be VERY CAREFUL
-        to ensure your board can handle a 5V serial input before hooking up
-        the RX line!
+        .. note:: be VERY CAREFUL to ensure your board can handle a 5V serial
+        input before hooking up the RX line!
+        
         """
         # The paper check command is different for older firmware:
         self.send_command('\x1Br\x00')  # ESC + 'r' + 0
