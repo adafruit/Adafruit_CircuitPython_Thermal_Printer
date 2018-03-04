@@ -132,7 +132,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         the serial RX line hooked up for this to work.
 
         .. note::
-        
+
             be VERY CAREFUL to ensure your board can handle a 5V serial
             input before hooking up the RX line!
 
