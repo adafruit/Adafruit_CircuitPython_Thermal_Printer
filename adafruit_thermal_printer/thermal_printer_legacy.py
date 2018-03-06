@@ -20,16 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 """
-`adafruit_thermal_printer_legacy`
-====================================================
+`adafruit_thermal_printer.thermal_printer_legacy.ThermalPrinter`
+=================================================================
 
 Thermal printer control module built to work with small serial thermal
 receipt printers.  Note that these printers have many different firmware
 versions and care must be taken to select the appropriate module inside this
 package for your firmware printer:
-  - thermal_printer = The latest printers with firmware version 2.68+
-  - thermal_printer_264 = Printers with firmware version 2.64 up to 2.68.
-  - thermal_printer_legacy = Printers with firmware version before 2.64.
+
+* thermal_printer = The latest printers with firmware version 2.68+
+* thermal_printer_264 = Printers with firmware version 2.64 up to 2.68.
+* thermal_printer_legacy = Printers with firmware version before 2.64.
 
 * Author(s): Tony DiCola
 """
@@ -128,9 +129,13 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
 
     def has_paper(self):
         """Return a boolean indicating if the printer has paper.  You MUST have
-        the serial RX line hooked up for this to work.  NOTE: be VERY CAREFUL
-        to ensure your board can handle a 5V serial input before hooking up
-        the RX line!
+        the serial RX line hooked up for this to work.
+
+        .. note::
+
+            be VERY CAREFUL to ensure your board can handle a 5V serial
+            input before hooking up the RX line!
+
         """
         # The paper check command is different for older firmware:
         self.send_command('\x1Br\x00')  # ESC + 'r' + 0

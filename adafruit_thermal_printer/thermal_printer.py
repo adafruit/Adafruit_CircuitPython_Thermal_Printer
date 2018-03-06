@@ -20,18 +20,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 """
-`adafruit_thermal_printer`
-====================================================
+`adafruit_thermal_printer.thermal_printer` - Thermal Printer Driver
+=====================================================================
 
 Thermal printer control module built to work with small serial thermal
 receipt printers.  Note that these printers have many different firmware
 versions and care must be taken to select the appropriate module inside this
 package for your firmware printer:
-  - thermal_printer = The latest printers with firmware version 2.68+
-  - thermal_printer_264 = Printers with firmware version 2.64 up to 2.68.
-  - thermal_printer_legacy = Printers with firmware version before 2.64.
+
+* thermal_printer = The latest printers with firmware version 2.68+
+* thermal_printer_264 = Printers with firmware version 2.64 up to 2.68.
+* thermal_printer_legacy = Printers with firmware version before 2.64.
 
 * Author(s): Tony DiCola
+
+Implementation Notes
+--------------------
+
+**Hardware:**
+
+* Mini `Thermal Receipt Printer
+  <https://www.adafruit.com/product/597>`_ (Product ID: 597)
+
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the ESP8622 and M0-based boards:
+  https://github.com/adafruit/circuitpython/releases
+
 """
 import time
 
@@ -319,7 +334,8 @@ class ThermalPrinter:
         pre-process your images with a script, you CANNOT send .jpg/.bmp/etc.
         image formats.  See this Processing sketch for preprocessing:
         https://github.com/adafruit/Adafruit-Thermal-Printer-Library/blob/master/processing/bitmapImageConvert/bitmapImageConvert.pde
-        NOTE: This is currently not working because it appears the bytes are
+
+        .. note:: This is currently not working because it appears the bytes are
         sent too slowly and the printer gets confused with not enough data being
         sent to it in the expected time.
         """
