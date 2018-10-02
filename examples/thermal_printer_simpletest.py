@@ -5,7 +5,6 @@ import busio
 
 import adafruit_thermal_printer
 
-
 # Pick which version thermal printer class to use depending on the version of
 # your printer.  Hold the button on the printer as it's powered on and it will
 # print a test page that displays the firmware version, like 2.64, 2.68, etc.
@@ -24,6 +23,10 @@ TX = board.TX
 # as your printer is configured (print a test page by holding the button
 # during power-up and it will show the baud rate).  Most printers use 19200.
 uart = busio.UART(TX, RX, baudrate=19200)
+
+# For a computer, use the pyserial library for uart access.
+# import serial
+# uart = serial.Serial("/dev/serial0", baudrate=19200, timeout=3000)
 
 # Create the printer instance.
 printer = ThermalPrinter(uart, auto_warm_up=False)
