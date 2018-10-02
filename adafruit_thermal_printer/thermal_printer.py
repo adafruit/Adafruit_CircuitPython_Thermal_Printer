@@ -202,7 +202,7 @@ class ThermalPrinter:
         if char == '\r':
             return  # Strip carriage returns by skipping them.
         self._wait_timeout()
-        self._uart.write(char)
+        self._uart.write(char.encode('ascii'))
         delay = self._byte_delay_s
         # Add extra delay for newlines or moving past the last column.
         if char == '\n' or self._column == self._max_column:
@@ -238,7 +238,7 @@ class ThermalPrinter:
 
     def send_command(self, command):
         """Send a command string to the printer."""
-        self._uart.write(command)
+        self._uart.write(command.encode('ascii'))
 
     # Do initialization in warm_up instead of the initializer because this
     # initialization takes a long time (5 seconds) and shouldn't happen during
