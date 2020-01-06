@@ -10,8 +10,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_Thermal_Printer
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer/actions/
     :alt: Build Status
 
 CircuitPython module for control of various small serial thermal printers.
