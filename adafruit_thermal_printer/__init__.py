@@ -1,3 +1,12 @@
+"""
+`adafruit_thermal_printer.thermal_printer_legacy.__init__`
+=================================================================
+
+Init function for the thermal printer library.
+
+* Author(s): Tony DiCola
+"""
+
 from adafruit_thermal_printer.thermal_printer import JUSTIFY_LEFT, \
 JUSTIFY_CENTER, JUSTIFY_RIGHT, SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE, \
 UNDERLINE_THIN, UNDERLINE_THICK
