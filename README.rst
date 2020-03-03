@@ -26,9 +26,6 @@ Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
 `the Adafruit library and driver bundle <https://github.com/adafruit/Adafruit_CircuitPython_Bundle>`_.
 
-**NOTE:** This library is not supported for smaller non-Express boards like
-the Trinket M0, Gemma M0, etc.
-
 Installing from PyPI
 ====================
 
