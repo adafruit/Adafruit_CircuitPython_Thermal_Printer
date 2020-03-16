@@ -59,21 +59,21 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.g
 
 # pylint: disable=bad-whitespace
 # Internally used constants.
-_UPDOWN_MASK        = const(1 << 2)
-_BOLD_MASK          = const(1 << 3)
+_UPDOWN_MASK = const(1 << 2)
+_BOLD_MASK = const(1 << 3)
 _DOUBLE_HEIGHT_MASK = const(1 << 4)
-_DOUBLE_WIDTH_MASK  = const(1 << 5)
-_STRIKE_MASK        = const(1 << 6)
+_DOUBLE_WIDTH_MASK = const(1 << 5)
+_STRIKE_MASK = const(1 << 6)
 
 # External constants:
-JUSTIFY_LEFT      = const(0)
-JUSTIFY_CENTER    = const(1)
-JUSTIFY_RIGHT     = const(2)
-SIZE_SMALL        = const(0)
-SIZE_MEDIUM       = const(1)
-SIZE_LARGE        = const(2)
-UNDERLINE_THIN    = const(0)
-UNDERLINE_THICK   = const(1)
+JUSTIFY_LEFT = const(0)
+JUSTIFY_CENTER = const(1)
+JUSTIFY_RIGHT = const(2)
+SIZE_SMALL = const(0)
+SIZE_MEDIUM = const(1)
+SIZE_LARGE = const(2)
+UNDERLINE_THIN = const(0)
+UNDERLINE_THICK = const(1)
 # pylint: enable=bad-whitespace
 
 
@@ -111,14 +111,14 @@ class ThermalPrinter:
     # as class-level variables that users can reference (i.e.
     # ThermalPrinter.UPC_A, etc) and write code that is independent of the
     # printer firmware version.
-    UPC_A   = 65
-    UPC_E   = 66
-    EAN13   = 67
-    EAN8    = 68
-    CODE39  = 69
-    ITF     = 70
+    UPC_A = 65
+    UPC_E = 66
+    EAN13 = 67
+    EAN8 = 68
+    CODE39 = 69
+    ITF = 70
     CODABAR = 71
-    CODE93  = 72
+    CODE93 = 72
     CODE128 = 73
     # pylint: enable=bad-whitespace
 
@@ -149,11 +149,19 @@ class ThermalPrinter:
                 obj._set_print_mode(self._mask)
             else:
                 obj._unset_print_mode(self._mask)
+
         # pylint: enable=protected-access
         # pylint: enable=too-few-public-methods
 
-    def __init__(self, uart, *, byte_delay_s=0.00057346, dot_feed_s=0.0021,
-                 dot_print_s=0.03, auto_warm_up=True):
+    def __init__(
+        self,
+        uart,
+        *,
+        byte_delay_s=0.00057346,
+        dot_feed_s=0.0021,
+        dot_print_s=0.03,
+        auto_warm_up=True
+    ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
         will output a 5V signal which can damage boards!  If RX is unconnected
@@ -199,21 +207,21 @@ class ThermalPrinter:
 
     def _write_char(self, char):
         # Write a single character to the printer.
-        if char == '\r':
+        if char == "\r":
             return  # Strip carriage returns by skipping them.
         self._wait_timeout()
-        self._uart.write(bytes(char, 'ascii'))
+        self._uart.write(bytes(char, "ascii"))
         delay = self._byte_delay_s
         # Add extra delay for newlines or moving past the last column.
-        if char == '\n' or self._column == self._max_column:
+        if char == "\n" or self._column == self._max_column:
             if self._column == 0:
                 # Feed line delay
-                delay += ((self._char_height + self._line_spacing) * \
-                           self._dot_feed_s)
+                delay += (self._char_height + self._line_spacing) * self._dot_feed_s
             else:
                 # Text line delay
-                delay += ((self._char_height * self._dot_print_s) + \
-                          (self._line_spacing * self._dot_feed_s))
+                delay += (self._char_height * self._dot_print_s) + (
+                    self._line_spacing * self._dot_feed_s
+                )
             self._column = 0
         else:
             self._column += 1
@@ -221,14 +229,16 @@ class ThermalPrinter:
 
     def _write_print_mode(self):
         # Write the printer mode to the printer.
-        self.send_command('\x1B!{0}'.format(chr(self._print_mode)))  # ESC + '!' + print mode byte
+        self.send_command(
+            "\x1B!{0}".format(chr(self._print_mode))
+        )  # ESC + '!' + print mode byte
         # Adjust character height and column count based on print mode.
         self._char_height = 48 if self._print_mode & _DOUBLE_HEIGHT_MASK else 24
         self._max_column = 16 if self._print_mode & _DOUBLE_WIDTH_MASK else 32
 
     def _set_print_mode(self, mask):
         # Enable the specified bits of the print mode.
-        self._print_mode |= (mask & 0xFF)
+        self._print_mode |= mask & 0xFF
         self._write_print_mode()
 
     def _unset_print_mode(self, mask):
@@ -238,7 +248,7 @@ class ThermalPrinter:
 
     def send_command(self, command):
         """Send a command string to the printer."""
-        self._uart.write(bytes(command, 'ascii'))
+        self._uart.write(bytes(command, "ascii"))
 
     # Do initialization in warm_up instead of the initializer because this
     # initialization takes a long time (5 seconds) and shouldn't happen during
@@ -271,22 +281,22 @@ class ThermalPrinter:
         # possibly paper 'stiction'.  More heating interval = clearer print,
         # but slower printing speed.
         # Send ESC + '7' (print settings) + heating dots, heat time, heat interval.
-        self.send_command('\x1B7\x0B{0}\x28'.format(chr(heat_time)))
+        self.send_command("\x1B7\x0B{0}\x28".format(chr(heat_time)))
         # Print density description from manual:
         # DC2 # n Set printing density
         # D4..D0 of n is used to set the printing density.  Density is
         # 50% + 5% * n(D4-D0) printing density.
         # D7..D5 of n is used to set the printing break time.  Break time
         # is n(D7-D5)*250us.
-        print_density = 10    # 100% (? can go higher, text is darker but fuzzy)
+        print_density = 10  # 100% (? can go higher, text is darker but fuzzy)
         print_break_time = 2  # 500 uS
         dc2_value = (print_break_time << 5) | print_density
-        self.send_command('\x12#{0}'.format(chr(dc2_value)))  # DC2 + '#' + value
+        self.send_command("\x12#{0}".format(chr(dc2_value)))  # DC2 + '#' + value
 
     def reset(self):
         """Reset the printer."""
         # Issue a reset command to the printer. (ESC + @)
-        self.send_command('\x1B@')
+        self.send_command("\x1B@")
         # Reset internal state:
         self._column = 0
         self._max_column = 32
@@ -295,10 +305,9 @@ class ThermalPrinter:
         self._barcode_height = 50
         # Configure tab stops on recent printers.
         # ESC + 'D' + tab stop value list ending with null to terminate.
-        self.send_command('\x1BD\x04\x08\x10\x14\x18\x1C\x00')
+        self.send_command("\x1BD\x04\x08\x10\x14\x18\x1C\x00")
 
-
-    def print(self, text, end='\n'):
+    def print(self, text, end="\n"):
         """Print a line of text.  Optionally specify the end keyword to
         override the new line printed after the text (set to None to disable
         the new line entirely).
@@ -318,9 +327,9 @@ class ThermalPrinter:
         assert 0 <= barcode_type <= 255
         assert 0 <= len(text) <= 255
         self.feed(1)  # Recent firmware can't print barcode w/o feed first???
-        self.send_command('\x1DH\x02')  # Print label below barcode
-        self.send_command('\x1Dw\x03')  # Barcode width 3 (0.375/1.0mm thin/thick)
-        self.send_command('\x1Dk{0}'.format(chr(barcode_type))) # Barcode type
+        self.send_command("\x1DH\x02")  # Print label below barcode
+        self.send_command("\x1Dw\x03")  # Barcode width 3 (0.375/1.0mm thin/thick)
+        self.send_command("\x1Dk{0}".format(chr(barcode_type)))  # Barcode type
         # Write length and then string (note this only works with 2.64+).
         self.send_command(chr(len(text)))
         self.send_command(text)
@@ -349,8 +358,9 @@ class ThermalPrinter:
         for row_start in range(0, height, chunk_height_limit):
             # Issue up to chunkHeightLimit rows at a time.
             chunk_height = min(height - row_start, chunk_height_limit)
-            self.send_command('\x12*{0}{1}'.format(chr(chunk_height),
-                                                   chr(row_bytes_clipped)))
+            self.send_command(
+                "\x12*{0}{1}".format(chr(chunk_height), chr(row_bytes_clipped))
+            )
             for _ in range(chunk_height):
                 for _ in range(row_bytes_clipped):
                     # Drop down to low level UART access to avoid newline and
@@ -364,11 +374,12 @@ class ThermalPrinter:
 
     def test_page(self):
         """Print a test page."""
-        self.send_command('\x12T')  # DC2 + 'T' for test page
+        self.send_command("\x12T")  # DC2 + 'T' for test page
         # Delay for 26 lines w/text (ea. 24 dots high) +
         # 26 text lines (feed 6 dots) + blank line
-        self._set_timeout(self._dot_print_s * 24 * 26 + \
-                          self._dot_feed_s * (6 * 26 + 30))
+        self._set_timeout(
+            self._dot_print_s * 24 * 26 + self._dot_feed_s * (6 * 26 + 30)
+        )
 
     def set_defaults(self):
         """Set default printing and text options.  This is useful to reset back
@@ -392,17 +403,22 @@ class ThermalPrinter:
     def _set_justify(self, val):
         assert 0 <= val <= 2
         if val == JUSTIFY_LEFT:
-            self.send_command('\x1Ba\x00')  # ESC + 'a' + 0
+            self.send_command("\x1Ba\x00")  # ESC + 'a' + 0
         elif val == JUSTIFY_CENTER:
-            self.send_command('\x1Ba\x01')  # ESC + 'a' + 1
+            self.send_command("\x1Ba\x01")  # ESC + 'a' + 1
         elif val == JUSTIFY_RIGHT:
-            self.send_command('\x1Ba\x02')  # ESC + 'a' + 2
+            self.send_command("\x1Ba\x02")  # ESC + 'a' + 2
 
     # pylint: disable=line-too-long
     # Write-only property, can't assume we can read state from the printer
     # since there is no command for it and hooking up RX is discouraged
     # (5V will damage many boards).
-    justify = property(None, _set_justify, None, "Set the justification of text, must be a value of JUSTIFY_LEFT, JUSTIFY_CENTER, or JUSTIFY_RIGHT.")
+    justify = property(
+        None,
+        _set_justify,
+        None,
+        "Set the justification of text, must be a value of JUSTIFY_LEFT, JUSTIFY_CENTER, or JUSTIFY_RIGHT.",
+    )
     # pylint: enable=line-too-long
 
     def _set_size(self, val):
@@ -410,54 +426,69 @@ class ThermalPrinter:
         if val == SIZE_SMALL:
             self._char_height = 24
             self._max_column = 32
-            self.send_command('\x1D!\x00')  # ASCII GS + '!' + 0x00
+            self.send_command("\x1D!\x00")  # ASCII GS + '!' + 0x00
         elif val == SIZE_MEDIUM:
             self._char_height = 48
             self._max_column = 32
-            self.send_command('\x1D!\x01')  # ASCII GS + '!' + 0x01
+            self.send_command("\x1D!\x01")  # ASCII GS + '!' + 0x01
         elif val == SIZE_LARGE:
             self._char_height = 48
             self._max_column = 16
-            self.send_command('\x1D!\x11')  # ASCII GS + '!' + 0x11
+            self.send_command("\x1D!\x11")  # ASCII GS + '!' + 0x11
         self._column = 0
 
     # pylint: disable=line-too-long
     # Write-only property, can't assume we can read state from the printer
     # since there is no command for it and hooking up RX is discouraged
     # (5V will damage many boards).
-    size = property(None, _set_size, None, "Set the size of text, must be a value of SIZE_SMALL, SIZE_MEDIUM, or SIZE_LARGE.")
+    size = property(
+        None,
+        _set_size,
+        None,
+        "Set the size of text, must be a value of SIZE_SMALL, SIZE_MEDIUM, or SIZE_LARGE.",
+    )
     # pylint: enable=line-too-long
 
     def _set_underline(self, val):
         assert val is None or (0 <= val <= 1)
         if val is None:
             # Turn off underline.
-            self.send_command('\x1B-\x00')  # ESC + '-' + 0
+            self.send_command("\x1B-\x00")  # ESC + '-' + 0
         elif val == UNDERLINE_THIN:
-            self.send_command('\x1B-\x01')  # ESC + '-' + 1
+            self.send_command("\x1B-\x01")  # ESC + '-' + 1
         elif val == UNDERLINE_THICK:
-            self.send_command('\x1B-\x02')  # ESC + '-' + 2
+            self.send_command("\x1B-\x02")  # ESC + '-' + 2
 
     # pylint: disable=line-too-long
     # Write-only property, can't assume we can read state from the printer
     # since there is no command for it and hooking up RX is discouraged
     # (5V will damage many boards).
-    underline = property(None, _set_underline, None, "Set the underline state of the text, must be None (off), UNDERLINE_THIN, or UNDERLINE_THICK.")
+    underline = property(
+        None,
+        _set_underline,
+        None,
+        "Set the underline state of the text, must be None (off), UNDERLINE_THIN, or UNDERLINE_THICK.",
+    )
     # pylint: enable=line-too-long
 
     def _set_inverse(self, inverse):
         # Set the inverse printing state to enabled disabled with the specified
         # boolean value.  This requires printer firmare 2.68+
         if inverse:
-            self.send_command('\x1DB\x01')  # ESC + 'B' + 1
+            self.send_command("\x1DB\x01")  # ESC + 'B' + 1
         else:
-            self.send_command('\x1DB\x00')  # ESC + 'B' + 0
+            self.send_command("\x1DB\x00")  # ESC + 'B' + 0
 
     # pylint: disable=line-too-long
     # Write-only property, can't assume we can read inverse state from the
     # printer since there is no command for it and hooking up RX is discouraged
     # (5V will damage many boards).
-    inverse = property(None, _set_inverse, None, "Set the inverse printing mode boolean to enable or disable inverse printing.")
+    inverse = property(
+        None,
+        _set_inverse,
+        None,
+        "Set the inverse printing mode boolean to enable or disable inverse printing.",
+    )
     # pylint: enable=line-too-long
 
     upside_down = _PrintModeBit(_UPDOWN_MASK)
@@ -473,31 +504,31 @@ class ThermalPrinter:
     def feed(self, lines):
         """Advance paper by specified number of blank lines."""
         assert 0 <= lines <= 255
-        self.send_command('\x1Bd{0}'.format(chr(lines)))
+        self.send_command("\x1Bd{0}".format(chr(lines)))
         self._set_timeout(self._dot_feed_s * self._char_height)
         self._column = 0
 
     def feed_rows(self, rows):
         """Advance paper by specified number of pixel rows."""
         assert 0 <= rows <= 255
-        self.send_command('\x1BJ{0}'.format(chr(rows)))
+        self.send_command("\x1BJ{0}".format(chr(rows)))
         self._set_timeout(rows * self._dot_feed_s)
         self._column = 0
 
     def flush(self):
         """Flush data pending in the printer."""
-        self.send_command('\f')
+        self.send_command("\f")
 
     def offline(self):
         """Put the printer into an offline state.  No other commands can be
         sent until an online call is made.
         """
-        self.send_command('\x1B=\x00')  # ESC + '=' + 0
+        self.send_command("\x1B=\x00")  # ESC + '=' + 0
 
     def online(self):
         """Put the printer into an online state after previously put offline.
         """
-        self.send_command('\x1B=\x01')  # ESC + '=' + 1
+        self.send_command("\x1B=\x01")  # ESC + '=' + 1
 
     def has_paper(self):
         """Return a boolean indicating if the printer has paper.  You MUST have
@@ -506,7 +537,7 @@ class ThermalPrinter:
         the RX line!
         """
         # This only works with firmware 2.64+:
-        self.send_command('\x1Bv\x00')  # ESC + 'v' + 0
+        self.send_command("\x1Bv\x00")  # ESC + 'v' + 0
         status = self._uart.read(1)
         if status is None:
             return False
@@ -519,13 +550,13 @@ class ThermalPrinter:
         """
         assert 24 <= height <= 255
         self._line_spacing = height - 24
-        self.send_command('\x1B3{0}'.format(chr(height)))  # ESC + '3' + height
+        self.send_command("\x1B3{0}".format(chr(height)))  # ESC + '3' + height
 
     def _set_barcode_height(self, height):
         """Set the barcode height in pixels.  Must be a value 1 - 255."""
         assert 1 <= height <= 255
         self._barcode_height = height
-        self.send_command('\x1Dh{0}'.format(chr(height)))  # ASCII GS + 'h' + height
+        self.send_command("\x1Dh{0}".format(chr(height)))  # ASCII GS + 'h' + height
 
     def _set_charset(self, charset=0):
         """Alters the character set for ASCII characters 0x23-0x7E.  See
@@ -533,7 +564,7 @@ class ThermalPrinter:
         supported on more recent firmware printers!
         """
         assert 0 <= charset <= 15
-        self.send_command('\x1BR{0}'.format(chr(charset)))  # ESC + 'R' + charset
+        self.send_command("\x1BR{0}".format(chr(charset)))  # ESC + 'R' + charset
 
     def _set_code_page(self, code_page=0):
         """Select alternate code page for upper ASCII symbols 0x80-0xFF.  See
@@ -541,12 +572,12 @@ class ThermalPrinter:
         on more recent firmware printers!
         """
         assert 0 <= code_page <= 47
-        self.send_command('\x1Bt{0}'.format(chr(code_page)))  # ESC + 't' + code page
+        self.send_command("\x1Bt{0}".format(chr(code_page)))  # ESC + 't' + code page
 
     def tab(self):
         """Print a tab (i.e. move to next 4 character block).  Note this is
         only supported on more recent firmware printers!"""
-        self.send_command('\t')
+        self.send_command("\t")
         # Increment to the next position that's every 4 spaces.
         # I.e. increment by 4 and go to the floor/first position of the block.
         self._column = (self._column + 4) & 0b11111100
