@@ -35,7 +35,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "adafruit_thermal_printer Library"
+project = "Adafruit Thermal Printer Library"
 copyright = "2017 Tony DiCola"
 author = "Tony DiCola"
 
@@ -110,7 +110,7 @@ html_static_path = ["_static"]
 html_favicon = "_static/favicon.ico"
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "adafruit_thermal_printerLibrarydoc"
+htmlhelp_basename = "AdafruitThermalPrinterLibrarydoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -135,8 +135,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "adafruit_thermal_printerLibrary.tex",
-        "adafruit_thermal_printer Library Documentation",
+        "AdafruitThermalPrinterLibrary.tex",
+        "Adafruit Thermal Printer Library Documentation",
         author,
         "manual",
     ),
@@ -149,8 +149,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "adafruit_thermal_printerlibrary",
-        "adafruit_thermal_printer Library Documentation",
+        "AdafruitThermalPrinterlibrary",
+        "Adafruit Thermal Printer Library Documentation",
         [author],
         1,
     )
@@ -164,10 +164,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "adafruit_thermal_printerLibrary",
-        " adafruit_thermal_printer Library Documentation",
+        "AdafruitThermalPrinterLibrary",
+        "Adafruit Thermal Printer Library Documentation",
         author,
-        "adafruit_thermal_printerLibrary",
+        "AdafruitThermalPrinterLibrary",
         "One line description of project.",
         "Miscellaneous",
     ),
