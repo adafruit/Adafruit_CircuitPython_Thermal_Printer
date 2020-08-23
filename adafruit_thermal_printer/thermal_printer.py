@@ -57,7 +57,6 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
 
 
-# pylint: disable=bad-whitespace
 # Internally used constants.
 _UPDOWN_MASK = const(1 << 2)
 _BOLD_MASK = const(1 << 3)
@@ -74,7 +73,6 @@ SIZE_MEDIUM = const(1)
 SIZE_LARGE = const(2)
 UNDERLINE_THIN = const(0)
 UNDERLINE_THICK = const(1)
-# pylint: enable=bad-whitespace
 
 
 # Disable too many instance members warning.  This is not something pylint can
@@ -106,7 +104,6 @@ UNDERLINE_THICK = const(1)
 class ThermalPrinter:
     """Thermal printer for printers with firmware version 2.68 or higher."""
 
-    # pylint: disable=bad-whitespace
     # Barcode types.  These vary based on the firmware version so are made
     # as class-level variables that users can reference (i.e.
     # ThermalPrinter.UPC_A, etc) and write code that is independent of the
@@ -120,7 +117,6 @@ class ThermalPrinter:
     CODABAR = 71
     CODE93 = 72
     CODE128 = 73
-    # pylint: enable=bad-whitespace
 
     class _PrintModeBit:
         # Internal descriptor class to simplify printer mode change properties.
