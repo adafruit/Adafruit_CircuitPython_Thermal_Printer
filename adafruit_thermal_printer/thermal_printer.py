@@ -57,6 +57,7 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
 
 
+# pylint: disable=bad-whitespace
 # Internally used constants.
 _UPDOWN_MASK = const(1 << 2)
 _BOLD_MASK = const(1 << 3)
@@ -73,6 +74,7 @@ SIZE_MEDIUM = const(1)
 SIZE_LARGE = const(2)
 UNDERLINE_THIN = const(0)
 UNDERLINE_THICK = const(1)
+# pylint: enable=bad-whitespace
 
 
 # Disable too many instance members warning.  This is not something pylint can
@@ -102,8 +104,9 @@ UNDERLINE_THICK = const(1)
 # else it will be very easy to break or introduce subtle incompatibilities with
 # older firmware printers.
 class ThermalPrinter:
-    """Thermal printer for printers with firmware version 2.68 or higher."""
+    """Thermal printer for printers with firmware version from 2.68 and below 2.168"""
 
+    # pylint: disable=bad-whitespace
     # Barcode types.  These vary based on the firmware version so are made
     # as class-level variables that users can reference (i.e.
     # ThermalPrinter.UPC_A, etc) and write code that is independent of the
@@ -117,6 +120,7 @@ class ThermalPrinter:
     CODABAR = 71
     CODE93 = 72
     CODE128 = 73
+    # pylint: enable=bad-whitespace
 
     class _PrintModeBit:
         # Internal descriptor class to simplify printer mode change properties.
@@ -149,6 +153,9 @@ class ThermalPrinter:
         # pylint: enable=protected-access
         # pylint: enable=too-few-public-methods
 
+
+
+
     def __init__(
         self,
         uart,
@@ -180,6 +187,7 @@ class ThermalPrinter:
         self._char_height = 24
         self._line_spacing = 6
         self._barcode_height = 50
+        self.up_down_mode = True
         # pylint: disable=line-too-long
         # Byte delay calculated based on assumption of 19200 baud.
         # From Arduino library code, see formula here:
@@ -312,6 +320,16 @@ class ThermalPrinter:
             self._write_char(char)
         if end is not None:
             self._write_char(end)
+    # def upDownMode(self, val):
+    #     """ Turns on/off upside-down printing mode (ESC + { + n)
+    #     where n is 0 or 1
+    #
+    #     """
+    #     if val is True:
+    #         self.send_command("\x1B{\x01")
+    #     else:
+    #         self.send_command("\x1B{\x00")
+
 
     def print_barcode(self, text, barcode_type):
         """Print a barcode with the specified text/number (the meaning
@@ -386,7 +404,8 @@ class ThermalPrinter:
         self.size = SIZE_SMALL
         self.underline = None
         self.inverse = False
-        self.upside_down = False
+        self.upside_down = False            # wg. dokumentacji powinno działać ale nie działa
+        self.up_down_mode = True            # zamiast powyższego zaiplementowałem to   <<
         self.double_height = False
         self.double_width = False
         self.strike = False
@@ -487,7 +506,19 @@ class ThermalPrinter:
     )
     # pylint: enable=line-too-long
 
-    upside_down = _PrintModeBit(_UPDOWN_MASK)
+    def _set_up_down_mode(self, up_down_mode):
+        if up_down_mode:
+            self.send_command("\x1B{\x01")
+
+        else:
+            self.send_command("\x1B{\x00")
+
+
+
+
+    up_down_mode = property(None, _set_up_down_mode, None, "Turns on/off upside-down printing mode")
+
+    upside_down = _PrintModeBit(_UPDOWN_MASK)   #wg. dokumentacji to powinno działać ale nie działa
 
     double_height = _PrintModeBit(_DOUBLE_HEIGHT_MASK)
 

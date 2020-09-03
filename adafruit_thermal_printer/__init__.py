@@ -29,11 +29,19 @@ def get_printer_class(version):
     assert version is not None
     assert version >= 0.0
     # pylint: disable=import-outside-toplevel
-    if version < 2.64:
-        import adafruit_thermal_printer.thermal_printer_legacy as thermal_printer
-    elif version < 2.68:
+
+    # I reversed order of checking the version
+
+    #TODO the legacy printer should be a base class for all newer printer. It'll make it easier
+    #to upgrade the library with newer firmware
+    if version >= 2.168:
+        import adafruit_thermal_printer.thermal_printer_2168 as thermal_printer
+    elif version >= 2.68:
+        import adafruit_thermal_printer.thermal_printer as thermal_printer
+    elif version >= 2.64:
         import adafruit_thermal_printer.thermal_printer_264 as thermal_printer
     else:
-        import adafruit_thermal_printer.thermal_printer as thermal_printer
+        import adafruit_thermal_printer.thermal_printer_legacy as thermal_printer
+    
     # pylint: enable=import-outside-toplevel
     return thermal_printer.ThermalPrinter
