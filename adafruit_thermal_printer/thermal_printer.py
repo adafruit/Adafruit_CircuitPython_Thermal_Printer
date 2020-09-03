@@ -320,15 +320,7 @@ class ThermalPrinter:
             self._write_char(char)
         if end is not None:
             self._write_char(end)
-    # def upDownMode(self, val):
-    #     """ Turns on/off upside-down printing mode (ESC + { + n)
-    #     where n is 0 or 1
-    #
-    #     """
-    #     if val is True:
-    #         self.send_command("\x1B{\x01")
-    #     else:
-    #         self.send_command("\x1B{\x00")
+
 
 
     def print_barcode(self, text, barcode_type):
@@ -516,9 +508,9 @@ class ThermalPrinter:
 
 
 
-    up_down_mode = property(None, _set_up_down_mode, None, "Turns on/off upside-down printing mode")
+    up_down_mode = property(None, _set_up_down_mode, None, "Turns on/off upside-down printing mode") #Should work in 2.68 so its here and not in 2.168 module
 
-    upside_down = _PrintModeBit(_UPDOWN_MASK)   #wg. dokumentacji to powinno działać ale nie działa
+    upside_down = _PrintModeBit(_UPDOWN_MASK)   #Don't work in 2.168 hence the above
 
     double_height = _PrintModeBit(_DOUBLE_HEIGHT_MASK)
 
