@@ -60,7 +60,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE128 = 73
 
     def __init__(
-        self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03, auto_warm_up=True
+            self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03, auto_warm_up=True
     ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
@@ -81,10 +81,9 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         )
 
     def warm_up(self, heat_time=120):
-        """Apparently there are no parameters for setting darkness in 2.168 (at least commands from 2.68 dont work),
-        So it is little compatibility method to reuse older code. 
-        """        
+        """Apparently there are no parameters for setting darkness in 2.168 
+        (at least commands from 2.68 dont work), So it is little
+        compatibility method to reuse older code. 
+        """
         self._set_timeout(0.5)  # Half second delay for printer to initialize.
         self.reset()
-
-    

@@ -57,7 +57,6 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
 
 
- 
 # Internally used constants.
 _UPDOWN_MASK = const(1 << 2)
 _BOLD_MASK = const(1 << 3)
@@ -74,7 +73,6 @@ SIZE_MEDIUM = const(1)
 SIZE_LARGE = const(2)
 UNDERLINE_THIN = const(0)
 UNDERLINE_THICK = const(1)
- 
 
 
 # Disable too many instance members warning.  This is not something pylint can
@@ -119,7 +117,7 @@ class ThermalPrinter:
     CODABAR = 71
     CODE93 = 72
     CODE128 = 73
-     
+
     class _PrintModeBit:
         # Internal descriptor class to simplify printer mode change properties.
         # This is tightly coupled to the ThermalPrinter implementation--do not
@@ -152,16 +150,14 @@ class ThermalPrinter:
         # pylint: enable=too-few-public-methods
 
 
-
-
     def __init__(
-        self,
-        uart,
-        *,
-        byte_delay_s=0.00057346,
-        dot_feed_s=0.0021,
-        dot_print_s=0.03,
-        auto_warm_up=True
+            self,
+            uart,
+            *,
+            byte_delay_s=0.00057346,
+            dot_feed_s=0.0021,
+            dot_print_s=0.03,
+            auto_warm_up=True
     ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
@@ -506,7 +502,8 @@ class ThermalPrinter:
 
 
 
-    up_down_mode = property(None, _set_up_down_mode, None, "Turns on/off upside-down printing mode") #Should work in 2.68 so its here and not in 2.168 module
+    up_down_mode = property(None, _set_up_down_mode, None, "Turns on/off upside-down printing mode") 
+    #The above Should work in 2.68 so its here and not in 2.168 module
 
     upside_down = _PrintModeBit(_UPDOWN_MASK)   #Don't work in 2.168 hence the above
 
