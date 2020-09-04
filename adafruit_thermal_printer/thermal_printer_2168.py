@@ -37,7 +37,6 @@ package for your firmware printer:
 * Author(s): Tony DiCola, Grzegorz Nowicki
 """
 
-from micropython import const
 
 import adafruit_thermal_printer.thermal_printer as thermal_printer
 
@@ -59,6 +58,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE93 = 72
     CODE128 = 73
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         uart,
@@ -67,6 +67,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         dot_print_s=0.03,
         auto_warm_up=True,
     ):
+    # pylint: enable=too-many-arguments
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
         will output a 5V signal which can damage boards!  If RX is unconnected
@@ -84,6 +85,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             dot_print_s=dot_print_s,
             auto_warm_up=auto_warm_up,
         )
+
 
     def warm_up(self, heat_time=120):
         """Apparently there are no parameters for setting darkness in 2.168
