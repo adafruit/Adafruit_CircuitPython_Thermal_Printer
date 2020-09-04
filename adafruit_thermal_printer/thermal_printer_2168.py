@@ -41,9 +41,9 @@ from micropython import const
 
 import adafruit_thermal_printer.thermal_printer as thermal_printer
 
+
 class ThermalPrinter(thermal_printer.ThermalPrinter):
-    """Thermal printer for printers with firmware version from 2.168
-    """
+    """Thermal printer for printers with firmware version from 2.168"""
 
     # Barcode types.  These vary based on the firmware version so are made
     # as class-level variables that users can reference (i.e.
@@ -60,7 +60,12 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE128 = 73
 
     def __init__(
-            self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03, auto_warm_up=True
+        self,
+        uart,
+        byte_delay_s=0.00057346,
+        dot_feed_s=0.0021,
+        dot_print_s=0.03,
+        auto_warm_up=True,
     ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
@@ -77,13 +82,13 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             byte_delay_s=byte_delay_s,
             dot_feed_s=dot_feed_s,
             dot_print_s=dot_print_s,
-            auto_warm_up=auto_warm_up
+            auto_warm_up=auto_warm_up,
         )
 
     def warm_up(self, heat_time=120):
-        """Apparently there are no parameters for setting darkness in 2.168 
+        """Apparently there are no parameters for setting darkness in 2.168
         (at least commands from 2.68 dont work), So it is little
-        compatibility method to reuse older code. 
+        compatibility method to reuse older code.
         """
         self._set_timeout(0.5)  # Half second delay for printer to initialize.
         self.reset()

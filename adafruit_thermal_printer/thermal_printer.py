@@ -149,15 +149,14 @@ class ThermalPrinter:
         # pylint: enable=protected-access
         # pylint: enable=too-few-public-methods
 
-
     def __init__(
-            self,
-            uart,
-            *,
-            byte_delay_s=0.00057346,
-            dot_feed_s=0.0021,
-            dot_print_s=0.03,
-            auto_warm_up=True
+        self,
+        uart,
+        *,
+        byte_delay_s=0.00057346,
+        dot_feed_s=0.0021,
+        dot_print_s=0.03,
+        auto_warm_up=True
     ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
@@ -315,8 +314,6 @@ class ThermalPrinter:
         if end is not None:
             self._write_char(end)
 
-
-
     def print_barcode(self, text, barcode_type):
         """Print a barcode with the specified text/number (the meaning
         varies based on the type of barcode) and type.  Type is a value from
@@ -390,8 +387,8 @@ class ThermalPrinter:
         self.size = SIZE_SMALL
         self.underline = None
         self.inverse = False
-        self.upside_down = False            # wg. dokumentacji powinno działać ale nie działa
-        self.up_down_mode = True            # zamiast powyższego zaiplementowałem to   <<
+        self.upside_down = False  # wg. dokumentacji powinno działać ale nie działa
+        self.up_down_mode = True  # zamiast powyższego zaiplementowałem to   <<
         self.double_height = False
         self.double_width = False
         self.strike = False
@@ -499,13 +496,12 @@ class ThermalPrinter:
         else:
             self.send_command("\x1B{\x00")
 
+    up_down_mode = property(
+        None, _set_up_down_mode, None, "Turns on/off upside-down printing mode"
+    )
+    # The above Should work in 2.68 so its here and not in 2.168 module
 
-
-
-    up_down_mode = property(None, _set_up_down_mode, None, "Turns on/off upside-down printing mode") 
-    #The above Should work in 2.68 so its here and not in 2.168 module
-
-    upside_down = _PrintModeBit(_UPDOWN_MASK)   #Don't work in 2.168 hence the above
+    upside_down = _PrintModeBit(_UPDOWN_MASK)  # Don't work in 2.168 hence the above
 
     double_height = _PrintModeBit(_DOUBLE_HEIGHT_MASK)
 
@@ -540,8 +536,7 @@ class ThermalPrinter:
         self.send_command("\x1B=\x00")  # ESC + '=' + 0
 
     def online(self):
-        """Put the printer into an online state after previously put offline.
-        """
+        """Put the printer into an online state after previously put offline."""
         self.send_command("\x1B=\x01")  # ESC + '=' + 1
 
     def has_paper(self):

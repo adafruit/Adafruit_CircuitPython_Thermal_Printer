@@ -71,7 +71,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE128 = 73
 
     def __init__(
-            self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03
+        self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03
     ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
