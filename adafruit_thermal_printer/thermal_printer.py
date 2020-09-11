@@ -387,8 +387,9 @@ class ThermalPrinter:
         self.size = SIZE_SMALL
         self.underline = None
         self.inverse = False
-        self.upside_down = False  # wg. dokumentacji powinno działać ale nie działa
-        self.up_down_mode = True  # zamiast powyższego zaiplementowałem to   <<
+        self.upside_down = False  # this should work in 2.68 according to user manual v 4.0 
+                                  # but it does't work with 2.168 hence i implemented the below        
+        self.up_down_mode = True 
         self.double_height = False
         self.double_width = False
         self.strike = False
