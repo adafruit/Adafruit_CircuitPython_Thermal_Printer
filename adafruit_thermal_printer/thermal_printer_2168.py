@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 #
-# Copyright (c) 2017 Tony DiCola
+# Copyright (c) 2020 Tony DiCola, Grzegorz Nowicki
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,8 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
 """
-`adafruit_thermal_printer.thermal_printer_264.ThermalPrinter`
+`adafruit_thermal_printer.thermal_printer_2168.ThermalPrinter`
 ==============================================================
 
 Thermal printer control module built to work with small serial thermal
@@ -33,28 +34,16 @@ package for your firmware printer:
 * thermal_printer_264 = Printers with firmware version 2.64 up to 2.68.
 * thermal_printer_legacy = Printers with firmware version before 2.64.
 
-* Author(s): Tony DiCola
+* Author(s): Tony DiCola, Grzegorz Nowicki
 """
-from micropython import const
+
 
 import adafruit_thermal_printer.thermal_printer as thermal_printer
 
 
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
-
-
-# Internally used constants.
-_INVERSE_MASK = const(1 << 1)  # Not in 2.6.8 firmware
-
-
-# Legacy behavior class for printers with firmware 2.64 up to 2.68.
-# See the comments in thermal_printer.py to understand how this class overrides
-# methods which change for older firmware printers!
+# pylint: disable=too-many-arguments
 class ThermalPrinter(thermal_printer.ThermalPrinter):
-    """Thermal printer for printers with firmware version 2.64 up to (but
-    NOT including) 2.68.
-    """
+    """Thermal printer for printers with firmware version from 2.168"""
 
     # Barcode types.  These vary based on the firmware version so are made
     # as class-level variables that users can reference (i.e.
@@ -71,7 +60,12 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE128 = 73
 
     def __init__(
-        self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03
+        self,
+        uart,
+        byte_delay_s=0.00057346,
+        dot_feed_s=0.0021,
+        dot_print_s=0.03,
+        auto_warm_up=True,
     ):
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
@@ -88,8 +82,13 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             byte_delay_s=byte_delay_s,
             dot_feed_s=dot_feed_s,
             dot_print_s=dot_print_s,
+            auto_warm_up=auto_warm_up,
         )
 
-    # Inverse on older printers (pre 2.68) uses a print mode bit instead of
-    # specific commands.
-    inverse = thermal_printer.ThermalPrinter._PrintModeBit(_INVERSE_MASK)
+    def warm_up(self, heat_time=120):
+        """Apparently there are no parameters for setting darkness in 2.168
+        (at least commands from 2.68 dont work), So it is little
+        compatibility method to reuse older code.
+        """
+        self._set_timeout(0.5)  # Half second delay for printer to initialize.
+        self.reset()

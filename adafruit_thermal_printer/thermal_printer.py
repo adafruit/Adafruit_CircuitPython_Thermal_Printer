@@ -102,7 +102,7 @@ UNDERLINE_THICK = const(1)
 # else it will be very easy to break or introduce subtle incompatibilities with
 # older firmware printers.
 class ThermalPrinter:
-    """Thermal printer for printers with firmware version 2.68 or higher."""
+    """Thermal printer for printers with firmware version from 2.68 and below 2.168"""
 
     # Barcode types.  These vary based on the firmware version so are made
     # as class-level variables that users can reference (i.e.
@@ -180,6 +180,7 @@ class ThermalPrinter:
         self._char_height = 24
         self._line_spacing = 6
         self._barcode_height = 50
+        self.up_down_mode = True
         # pylint: disable=line-too-long
         # Byte delay calculated based on assumption of 19200 baud.
         # From Arduino library code, see formula here:
@@ -387,6 +388,9 @@ class ThermalPrinter:
         self.underline = None
         self.inverse = False
         self.upside_down = False
+        # this should work in 2.68 according to user manual v 4.0
+        # but it does't work with 2.168 hence i implemented the below
+        self.up_down_mode = True
         self.double_height = False
         self.double_width = False
         self.strike = False
@@ -487,7 +491,19 @@ class ThermalPrinter:
     )
     # pylint: enable=line-too-long
 
-    upside_down = _PrintModeBit(_UPDOWN_MASK)
+    def _set_up_down_mode(self, up_down_mode):
+        if up_down_mode:
+            self.send_command("\x1B{\x01")
+
+        else:
+            self.send_command("\x1B{\x00")
+
+    up_down_mode = property(
+        None, _set_up_down_mode, None, "Turns on/off upside-down printing mode"
+    )
+    # The above Should work in 2.68 so its here and not in 2.168 module
+
+    upside_down = _PrintModeBit(_UPDOWN_MASK)  # Don't work in 2.168 hence the above
 
     double_height = _PrintModeBit(_DOUBLE_HEIGHT_MASK)
 
@@ -522,8 +538,7 @@ class ThermalPrinter:
         self.send_command("\x1B=\x00")  # ESC + '=' + 0
 
     def online(self):
-        """Put the printer into an online state after previously put offline.
-        """
+        """Put the printer into an online state after previously put offline."""
         self.send_command("\x1B=\x01")  # ESC + '=' + 1
 
     def has_paper(self):
