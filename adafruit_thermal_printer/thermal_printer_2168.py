@@ -100,13 +100,14 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         # pylint: disable=too-many-locals
         img = imageio.imread(file)
         # pylint: disable=unused-variable
+        # pylint: disable=unbalanced-tuple-unpacking
         try:
             if img.shape[2] == 4:  # 3 colors with alpha channel
                 red, green, blue, alpha = np.split(img, 4, axis=2)
-        # pylint: enable=unused-variable
+            # pylint: enable=unused-variable
             else:  # just 3 colors
                 red, green, blue = np.split(img, 3, axis=2)
-
+            # pylint: enable=unbalanced-tuple-unpacking
             red = red.reshape(-1)
             green = green.reshape(-1)
             blue = blue.reshape(-1)
@@ -163,9 +164,11 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             self._uart.write(d)
         # pylint: enable=invalid-name
 
+    # pylint: disable=no-self-use
     def _write_to_byte(self, pos, byte):
         """Helper method used in _convert_data_horizontally to compress pixel data into bytes"""
         # pylint: disable=too-many-return-statements
+
         if pos == 0:
             return byte | 0b10000000
         if pos == 1:
@@ -182,7 +185,10 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             return byte | 0b00000010
         if pos == 7:
             return byte | 0b00000001
+        return byte | 0b00000000
         # pylint: enable=too-many-return-statements
+
+    # pylint: enable=no-self-use
 
     def _convert_data_horizontally(self, data_array):
         """Convert data from numpy array format to printer's horizontal printing module format"""
@@ -191,6 +197,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
 
         datas = bytearray()
         # pylint: disable=invalid-name
+        # pylint: disable=too-many-nested-blocks
         for y in range(y_size):
             for x in range(0, x_size, 8):
                 data = 0
@@ -205,4 +212,5 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
                         pass
                 datas.append(data)
         return datas
+        # pylint: enable=too-many-nested-blocks
         # pylint: enable=invalid-name
