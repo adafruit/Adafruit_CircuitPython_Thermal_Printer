@@ -99,9 +99,11 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         """ Convert bitmap file and print as picture using GS v 0 command """
         # pylint: disable=too-many-locals
         img = imageio.imread(file)
+        # pylint: disable=unused-variable
         try:
             if img.shape[2] == 4:  # 3 colors with alpha channel
                 red, green, blue, alpha = np.split(img, 4, axis=2)
+        # pylint: enable=unused-variable
             else:  # just 3 colors
                 red, green, blue = np.split(img, 3, axis=2)
 
@@ -163,6 +165,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
 
     def _write_to_byte(self, pos, byte):
         """Helper method used in _convert_data_horizontally to compress pixel data into bytes"""
+        # pylint: disable=too-many-return-statements
         if pos == 0:
             return byte | 0b10000000
         if pos == 1:
@@ -179,6 +182,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             return byte | 0b00000010
         if pos == 7:
             return byte | 0b00000001
+        # pylint: enable=too-many-return-statements
 
     def _convert_data_horizontally(self, data_array):
         """Convert data from numpy array format to printer's horizontal printing module format"""
