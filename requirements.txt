@@ -1,2 +1,4 @@
 Adafruit-Blinka
 pyserial
+imageio
+numpy
