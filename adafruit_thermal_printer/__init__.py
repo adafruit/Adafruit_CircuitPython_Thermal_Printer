@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2017 Tony DiCola for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 """
 `adafruit_thermal_printer.thermal_printer_legacy.__init__`
 =================================================================
