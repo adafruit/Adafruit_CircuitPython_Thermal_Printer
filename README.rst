@@ -2,8 +2,8 @@
 Introduction
 ============
 
-.. image:: https://readthedocs.org/projects/adafruit_circuitpython_thermal_printer/badge/?version=latest
-    :target: https://adafruit_circuitpython_thermal_printer.readthedocs.io/
+.. image:: https://readthedocs.org/projects/adafruit-circuitpython-thermal-printer/badge/?version=latest
+    :target: https://circuitpython.readthedocs.io/projects/thermal_printer/en/latest/
     :alt: Documentation Status
 
 .. image :: https://img.shields.io/discord/327254708534116352.svg
