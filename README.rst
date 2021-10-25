@@ -56,6 +56,11 @@ Usage Example
 
 See examples/thermal_printer_simpletest.py for a demo of basic printer usage.
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/thermal_printer/en/latest/>`_.
+
 Contributing
 ============
 
