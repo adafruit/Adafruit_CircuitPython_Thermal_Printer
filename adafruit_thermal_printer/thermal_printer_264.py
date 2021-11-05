@@ -20,7 +20,7 @@ package for your firmware printer:
 """
 from micropython import const
 
-import adafruit_thermal_printer.thermal_printer as thermal_printer
+from adafruit_thermal_printer import thermal_printer
 
 
 __version__ = "0.0.0-auto.0"
