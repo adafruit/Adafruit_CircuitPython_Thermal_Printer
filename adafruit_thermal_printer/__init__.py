@@ -41,7 +41,7 @@ def get_printer_class(version):
     if version >= 2.168:
         import adafruit_thermal_printer.thermal_printer_2168 as thermal_printer
     elif version >= 2.68:
-        import adafruit_thermal_printer.thermal_printer as thermal_printer
+        from adafruit_thermal_printer import thermal_printer
     elif version >= 2.64:
         import adafruit_thermal_printer.thermal_printer_264 as thermal_printer
     else:

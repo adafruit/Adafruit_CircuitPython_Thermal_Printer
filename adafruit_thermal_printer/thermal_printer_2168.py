@@ -21,7 +21,7 @@ package for your firmware printer:
 """
 
 
-import adafruit_thermal_printer.thermal_printer as thermal_printer
+from adafruit_thermal_printer import thermal_printer
 
 
 # pylint: disable=too-many-arguments
