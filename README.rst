@@ -3,7 +3,7 @@ Introduction
 ============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-thermal-printer/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/thermal_printer/en/latest/
+    :target: https://docs.circuitpython.org/projects/thermal_printer/en/latest/
     :alt: Documentation Status
 
 .. image :: https://img.shields.io/discord/327254708534116352.svg
@@ -59,7 +59,7 @@ See examples/thermal_printer_simpletest.py for a demo of basic printer usage.
 Documentation
 =============
 
-API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/thermal_printer/en/latest/>`_.
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/thermal_printer/en/latest/>`_.
 
 Contributing
 ============
