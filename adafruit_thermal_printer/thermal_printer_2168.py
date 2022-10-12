@@ -23,6 +23,11 @@ package for your firmware printer:
 
 from adafruit_thermal_printer import thermal_printer
 
+try:
+    import typing  # pylint: disable=unused-import
+    from busio import UART
+except ImportError:
+    pass
 
 # pylint: disable=too-many-arguments
 class ThermalPrinter(thermal_printer.ThermalPrinter):
@@ -44,12 +49,12 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
 
     def __init__(
         self,
-        uart,
-        byte_delay_s=0.00057346,
-        dot_feed_s=0.0021,
-        dot_print_s=0.03,
-        auto_warm_up=True,
-    ):
+        uart: UART,
+        byte_delay_s: float = 0.00057346,
+        dot_feed_s: float = 0.0021,
+        dot_print_s: float = 0.03,
+        auto_warm_up: bool = True,
+    ) -> None:
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
         will output a 5V signal which can damage boards!  If RX is unconnected
@@ -68,7 +73,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             auto_warm_up=auto_warm_up,
         )
 
-    def warm_up(self, heat_time=120):
+    def warm_up(self, heat_time: float = 120) -> None:
         """Apparently there are no parameters for setting darkness in 2.168
         (at least commands from 2.68 dont work), So it is little
         compatibility method to reuse older code.

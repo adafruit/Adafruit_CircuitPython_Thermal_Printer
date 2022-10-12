@@ -4,3 +4,4 @@
 
 Adafruit-Blinka
 pyserial
+typing-extensions~=4.0
