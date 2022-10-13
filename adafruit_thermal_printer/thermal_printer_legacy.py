@@ -58,7 +58,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE11 = 9
     MSI = 10
 
-    def __init__(
+    def __init__(  # pylint: disable=duplicate-code
         self,
         uart: UART,
         byte_delay_s: float = 0.00057346,
