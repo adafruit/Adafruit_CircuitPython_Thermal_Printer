@@ -38,6 +38,7 @@ from micropython import const
 try:
     from typing import Optional, Type
     from typing_extensions import Literal
+    from circuitpython_typing import WriteableBuffer, ReadableBuffer
     from busio import UART
 except ImportError:
     pass
@@ -128,8 +129,8 @@ class ThermalPrinter:
 
         def __get__(
             self,
-            obj: Optional["ThermalPrinter"],
-            objtype: Optional[Type["ThermalPrinter"]],
+            obj: "ThermalPrinter",
+            objtype: Type["ThermalPrinter"],
         ) -> bool:
             return obj._print_mode & self._mask > 0
 
@@ -297,7 +298,7 @@ class ThermalPrinter:
         # ESC + 'D' + tab stop value list ending with null to terminate.
         self.send_command("\x1BD\x04\x08\x10\x14\x18\x1C\x00")
 
-    def print(self, text: str, end: str = "\n") -> None:
+    def print(self, text: str, end: Optional[str] = "\n") -> None:
         """Print a line of text.  Optionally specify the end keyword to
         override the new line printed after the text (set to None to disable
         the new line entirely).
@@ -326,7 +327,7 @@ class ThermalPrinter:
         self._set_timeout((self._barcode_height + 40) * self._dot_print_s)
         self._column = 0
 
-    def _print_bitmap(self, width: int, height: int, data: bytes) -> None:
+    def _print_bitmap(self, width: int, height: int, data: ReadableBuffer) -> None:
         """Print a bitmap image of the specified width, height and data bytes.
         Data bytes must be in 1-bit per pixel format, i.e. each byte represents
         8 pixels of image data along a row of the image.  You will want to

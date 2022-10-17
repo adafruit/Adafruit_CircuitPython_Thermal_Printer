@@ -73,7 +73,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             auto_warm_up=auto_warm_up,
         )
 
-    def warm_up(self, heat_time: float = 120) -> None:
+    def warm_up(self, heat_time: int = 120) -> None:
         """Apparently there are no parameters for setting darkness in 2.168
         (at least commands from 2.68 dont work), So it is little
         compatibility method to reuse older code.
