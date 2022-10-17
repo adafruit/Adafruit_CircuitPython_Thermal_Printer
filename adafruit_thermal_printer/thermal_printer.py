@@ -38,7 +38,7 @@ from micropython import const
 try:
     from typing import Optional, Type
     from typing_extensions import Literal
-    from circuitpython_typing import WriteableBuffer, ReadableBuffer
+    from circuitpython_typing import ReadableBuffer
     from busio import UART
 except ImportError:
     pass
