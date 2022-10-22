@@ -185,12 +185,19 @@ class ThermalPrinter:
         while time.monotonic() < self._resume:
             pass
 
-    def _write_char(self, char):
+    def _write_char(self, char, *, encoding="cp437"):
         # Write a single character to the printer.
+        #
+        # If you notice any problems with the encoding, you may fall
+        # back to the more restrictive encoding
+        #
+        #        encoding="ascii"
+        #
+        # Note that this parameter is keyword only!
         if char == "\r":
             return  # Strip carriage returns by skipping them.
         self._wait_timeout()
-        self._uart.write(bytes(char, "ascii"))
+        self._uart.write(bytes(char, encoding))
         delay = self._byte_delay_s
         # Add extra delay for newlines or moving past the last column.
         if char == "\n" or self._column == self._max_column:
