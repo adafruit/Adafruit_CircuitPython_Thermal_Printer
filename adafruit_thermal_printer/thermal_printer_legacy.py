@@ -109,7 +109,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         """Advance paper by specified number of blank lines."""
         # Just send line feeds for older printers.
         for _ in range(lines):
-            self._write_char("\n")
+            self._write_char("\n", encoding="ascii")
 
     def has_paper(self):
         """Return a boolean indicating if the printer has paper.  You MUST have
