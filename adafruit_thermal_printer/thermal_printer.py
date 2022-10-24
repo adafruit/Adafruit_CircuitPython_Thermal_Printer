@@ -185,15 +185,8 @@ class ThermalPrinter:
         while time.monotonic() < self._resume:
             pass
 
-    def _write_char(self, char, *, encoding="cp437"):
+    def _write_char(self, char, *, encoding):
         # Write a single character to the printer.
-        #
-        # If you notice any problems with the encoding, you may fall
-        # back to the more restrictive encoding
-        #
-        #        encoding="ascii"
-        #
-        # Note that this parameter is keyword only!
         if char == "\r":
             return  # Strip carriage returns by skipping them.
         self._wait_timeout()
@@ -294,15 +287,17 @@ class ThermalPrinter:
         # ESC + 'D' + tab stop value list ending with null to terminate.
         self.send_command("\x1BD\x04\x08\x10\x14\x18\x1C\x00")
 
-    def print(self, text, end="\n"):
+    def print(self, text, *, end="\n", encoding="utf-8"):
         """Print a line of text.  Optionally specify the end keyword to
         override the new line printed after the text (set to None to disable
-        the new line entirely).
+        the new line entirely). Optionally specify the encoding. Some 
+        printers only accept the more restrictive encodings "cp437" and 
+        "ascii".
         """
         for char in text:
-            self._write_char(char)
+            self._write_char(char, encoding=encoding)
         if end is not None:
-            self._write_char(end)
+            self._write_char(end, encoding=encoding)
 
     def print_barcode(self, text, barcode_type):
         """Print a barcode with the specified text/number (the meaning
