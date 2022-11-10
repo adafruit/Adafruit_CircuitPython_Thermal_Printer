@@ -129,12 +129,12 @@ class ThermalPrinter:
 
         def __get__(
             self,
-            obj: "ThermalPrinter",
-            objtype: Type["ThermalPrinter"],
+            obj: Optional["ThermalPrinter"],
+            objtype: Optional[Type["ThermalPrinter"]],
         ) -> bool:
             return obj._print_mode & self._mask > 0
 
-        def __set__(self, obj: Optional["ThermalPrinter"], val: int) -> None:
+        def __set__(self, obj: "ThermalPrinter", val: int) -> None:
             if val:
                 obj._set_print_mode(self._mask)
             else:
