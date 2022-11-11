@@ -22,6 +22,11 @@ from micropython import const
 
 from adafruit_thermal_printer import thermal_printer
 
+try:
+    import typing  # pylint: disable=unused-import
+    from busio import UART
+except ImportError:
+    pass
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
@@ -54,8 +59,12 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     MSI = 10
 
     def __init__(
-        self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03
-    ):
+        self,
+        uart: UART,
+        byte_delay_s: float = 0.00057346,
+        dot_feed_s: float = 0.0021,
+        dot_print_s: float = 0.03,
+    ) -> None:
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
         will output a 5V signal which can damage boards!  If RX is unconnected
@@ -73,7 +82,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
             dot_print_s=dot_print_s,
         )
 
-    def print_barcode(self, text, barcode_type):
+    def print_barcode(self, text: str, barcode_type: int) -> None:
         """Print a barcode with the specified text/number (the meaning
         varies based on the type of barcode) and type.  Type is a value from
         the datasheet or class-level variables like UPC_A, etc. for
@@ -85,7 +94,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         self.feed(1)  # Recent firmware can't print barcode w/o feed first???
         self.send_command("\x1DH\x02")  # Print label below barcode
         self.send_command("\x1Dw\x03")  # Barcode width 3 (0.375/1.0mm thin/thick)
-        self.send_command("\x1Dk{0}".format(chr(barcode_type)))  # Barcode type
+        self.send_command(f"\x1Dk{chr(barcode_type)}")  # Barcode type
         # Pre-2.64 firmware prints the text and then a null character to end.
         # Instead of the length of text as a prefix.
         self.send_command(text)
@@ -93,7 +102,7 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         self._set_timeout((self._barcode_height + 40) * self._dot_print_s)
         self._column = 0
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset the printer."""
         # Issue a reset command to the printer. (ESC + @)
         self.send_command("\x1B@")
@@ -105,13 +114,13 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
         self._barcode_height = 50
         # Skip tab configuration on older printers.
 
-    def feed(self, lines):
+    def feed(self, lines: int) -> None:
         """Advance paper by specified number of blank lines."""
         # Just send line feeds for older printers.
         for _ in range(lines):
             self._write_char("\n")
 
-    def has_paper(self):
+    def has_paper(self) -> bool:
         """Return a boolean indicating if the printer has paper.  You MUST have
         the serial RX line hooked up for this to work.
 
