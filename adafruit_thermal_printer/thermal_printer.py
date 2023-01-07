@@ -293,6 +293,8 @@ class ThermalPrinter:
         the new line entirely). Optionally specify the encoding. Some
         printers only accept the more restrictive encodings "cp437" and
         "ascii".
+        Note: Encodings other than "utf-8" are not accepted by
+        microcontrollers.
         """
         for char in text:
             self._write_char(char, encoding=encoding)
