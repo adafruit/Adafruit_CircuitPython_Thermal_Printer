@@ -298,7 +298,9 @@ class ThermalPrinter:
         # ESC + 'D' + tab stop value list ending with null to terminate.
         self.send_command("\x1BD\x04\x08\x10\x14\x18\x1C\x00")
 
-    def print(self, text: str, end: Optional[str] = "\n", *, encoding: str = "utf-8") -> None:
+    def print(
+        self, text: str, end: Optional[str] = "\n", *, encoding: str = "utf-8"
+    ) -> None:
         """Print a line of text.  Optionally specify the end keyword to
         override the new line printed after the text (set to None to disable
         the new line entirely). Optionally specify the encoding. Some
