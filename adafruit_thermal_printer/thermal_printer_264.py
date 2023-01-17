@@ -22,6 +22,11 @@ from micropython import const
 
 from adafruit_thermal_printer import thermal_printer
 
+try:
+    import typing  # pylint: disable=unused-import
+    from busio import UART
+except ImportError:
+    pass
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermal_Printer.git"
@@ -54,8 +59,12 @@ class ThermalPrinter(thermal_printer.ThermalPrinter):
     CODE128 = 73
 
     def __init__(
-        self, uart, byte_delay_s=0.00057346, dot_feed_s=0.0021, dot_print_s=0.03
-    ):
+        self,
+        uart: UART,
+        byte_delay_s: float = 0.00057346,
+        dot_feed_s: float = 0.0021,
+        dot_print_s: float = 0.03,
+    ) -> None:
         """Thermal printer class.  Requires a serial UART connection with at
         least the TX pin connected.  Take care connecting RX as the printer
         will output a 5V signal which can damage boards!  If RX is unconnected
