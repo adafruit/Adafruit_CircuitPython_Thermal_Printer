@@ -75,6 +75,7 @@ UNDERLINE_THICK = const(1)
 # Disable this warning.
 # pylint: disable=too-many-public-methods
 
+
 # Thermal printer class for printers with firmware version 2.68 and higher.
 # Do not modify this class without fully understanding its coupling to the
 # legacy and 2.64+ version printer which inherit from it.  These legacy printer

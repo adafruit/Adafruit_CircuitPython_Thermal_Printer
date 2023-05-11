@@ -29,6 +29,7 @@ try:
 except ImportError:
     pass
 
+
 # pylint: disable=too-many-arguments
 class ThermalPrinter(thermal_printer.ThermalPrinter):
     """Thermal printer for printers with firmware version from 2.168"""
